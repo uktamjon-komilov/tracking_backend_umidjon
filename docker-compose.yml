@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: .
+    command: sh -c "gunicorn configs.wsgi:application --bind 0.0.0.0:5600 --log-level debug"
+    ports:
+      - "5600:5600"
+    environment:
+      - staging=1
+      - PORT=5600
+    volumes:
+      - ./media:/home/app/web/media
+      - ./static:/home/app/web/static
+
+  db:
+    image: postgres:14.0-alpine
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/
+    restart: always
+    ports:
+      - "5555:5555"
+    expose:
+      - "5555"
+    command: -p 5555
+    environment:
+      - POSTGRES_DB=gps_tracking
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=R3=68~!7P5g2
+    logging:
+      options:
+        max-size: 10m
