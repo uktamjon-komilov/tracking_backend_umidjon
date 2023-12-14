@@ -87,11 +87,11 @@ if os.environ.get("staging") == "1":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "HOST": "db",
-            "PORT": "5555",
-            "NAME": "gps_tracking",
-            "USER": "postgres",
-            "PASSWORD": "R3=68~!7P5g2",
+            "HOST": os.environ.get("DB_HOST"),
+            "PORT": os.environ.get("DB_PORT"),
+            "NAME": os.environ.get("DB_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASSWORD"),
         }
     }
 else:

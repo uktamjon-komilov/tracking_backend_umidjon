@@ -269,3 +269,4 @@ Pipfile
 Pipfile.lock
 pg_data
 static
+.env.prod
