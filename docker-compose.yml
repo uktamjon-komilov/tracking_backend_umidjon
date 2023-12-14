@@ -15,8 +15,8 @@ services:
       - ./media:/home/app/web/media
       - ./static:/home/app/web/static
 
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network:
+      - "host"
 
   # db:
   #   image: postgres:14.0-alpine
