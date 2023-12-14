@@ -21,7 +21,7 @@ sentry_sdk.init(
 
 SECRET_KEY = "django-insecure-s0zumy7wq4v%p5#12ylt*m(9hl#rel+6r^1m%u0!rh_-)b3*sv"
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG") == "1"
 
 ALLOWED_HOSTS = [
     "*",
