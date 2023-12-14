@@ -7,12 +7,16 @@ services:
     command: sh -c "gunicorn configs.wsgi:application --bind 0.0.0.0:5600 --log-level debug"
     ports:
       - "5600:5600"
+    env_file:
+      - .env
     environment:
-      - staging=1
       - PORT=5600
     volumes:
       - ./media:/home/app/web/media
       - ./static:/home/app/web/static
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   # db:
   #   image: postgres:14.0-alpine
