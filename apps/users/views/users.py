@@ -87,6 +87,7 @@ class UserSaveSerializer(serializers.ModelSerializer):
             "phone",
             "photo",
             "district",
+            "is_active",
         ]
 
     def validate_photo(self, value):
