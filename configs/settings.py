@@ -25,15 +25,14 @@ DEBUG = os.environ.get("DEBUG") == "1"
 
 ALLOWED_HOSTS = [
     "*",
-    "http://tracking.pos-system.uz",
-    "https://tracking.pos-system.uz",
+    "https://back.xbgps.uz",
     "167.71.236.73",
     "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://*.pos-system.uz",
-    "https://*.pos-system.uz",
+    "http://*.xbgps.uz",
+    "https://*.xbgps.uz",
 ]
 
 INSTALLED_APPS = [
