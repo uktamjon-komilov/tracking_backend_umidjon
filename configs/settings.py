@@ -25,12 +25,15 @@ DEBUG = os.environ.get("DEBUG") == "1"
 
 ALLOWED_HOSTS = [
     "*",
+    "http://back.xbgps.uz",
     "https://back.xbgps.uz",
     "167.71.236.73",
     "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://xbgps.uz",
+    "https://xbgps.uz",
     "http://*.xbgps.uz",
     "https://*.xbgps.uz",
 ]
@@ -159,7 +162,6 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=31),
 }
-
 
 CORS_ALLOW_CREDENTIALS = True
 
