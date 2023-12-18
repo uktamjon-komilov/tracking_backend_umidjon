@@ -180,9 +180,9 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
                 ),
             },
             "metadata": {
-                "centroid": calculate_centroid(locations=locations),
+                "centroid": calculate_centroid(locations=locations_data),
                 "zoom_level": calculate_zoom_level(
-                    locations=locations,
+                    locations=locations_data,
                     map_width=1500,
                     map_height=1000,
                 ),
