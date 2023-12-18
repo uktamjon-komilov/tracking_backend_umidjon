@@ -121,6 +121,7 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
                 "last_name": user.last_name,
                 "middle_name": user.middle_name,
                 "phone": user.phone,
+                "duty_areas": str(user.district),
                 "photo": None
                 if user.photo is None
                 else request.build_absolute_uri(user.photo.url),
