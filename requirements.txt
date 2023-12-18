@@ -8,3 +8,4 @@ Pillow==10.1.0
 tzlocal==5.2
 sentry-sdk==1.38.0
 python-dotenv==1.0.0
+numpy==1.26.2
