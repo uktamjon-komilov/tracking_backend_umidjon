@@ -1,5 +1,6 @@
 import random
 import contextlib
+import numpy as np
 
 from django.utils.timezone import datetime, timedelta, make_aware, get_current_timezone
 from rest_framework.response import Response
@@ -34,6 +35,55 @@ background_colors = [
     "#e74c3c",  # Alizarin Crimson
     "#f39c12",  # Orange
 ]
+
+
+def calculate_centroid(locations):
+    if not locations:
+        return None
+
+    total_longitude = 0
+    total_latitude = 0
+    count = 0
+
+    for location in locations:
+        total_longitude += location["longitude"]
+        total_latitude += location["latitude"]
+        count += 1
+
+    return {
+        "longitude": total_longitude / count,
+        "latitude": total_latitude / count,
+    }
+
+
+def calculate_bounds(locations):
+    if not locations:
+        return None
+
+    min_lat = min(location["latitude"] for location in locations)
+    max_lat = max(location["latitude"] for location in locations)
+    min_lon = min(location["longitude"] for location in locations)
+    max_lon = max(location["longitude"] for location in locations)
+
+    return (min_lat, max_lat, min_lon, max_lon)
+
+
+def calculate_zoom_level(locations, map_width, map_height):
+    bounds = calculate_bounds(locations)
+    if not bounds:
+        return None
+
+    WORLD_WIDTH = 256
+    ZOOM_MAX = 21
+
+    lat_ratio = (bounds[1] - bounds[0]) / 180
+    lon_ratio = (bounds[3] - bounds[2]) / 360
+
+    zoom_lat = -1 * np.log2(lat_ratio) + np.log2(map_height / WORLD_WIDTH)
+    zoom_lon = -1 * np.log2(lon_ratio) + np.log2(map_width / WORLD_WIDTH)
+
+    zoom = min(zoom_lat, zoom_lon, ZOOM_MAX)
+    return max(0, min(zoom, ZOOM_MAX))
 
 
 class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
@@ -127,6 +177,14 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
                 else request.build_absolute_uri(user.photo.url),
                 "has_not_updated_recently": not self.check_if_recently_updated(
                     last_location
+                ),
+            },
+            "metadata": {
+                "centroid": calculate_centroid(locations=locations),
+                "zoom_level": calculate_zoom_level(
+                    locations=locations,
+                    map_width=1500,
+                    map_height=1000,
                 ),
             },
             "locations": locations_data if locations_data else None,
