@@ -17,7 +17,6 @@ RUN apk update
 # install psycopg2 dependencies
 RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN apk add python3-dev
-RUN apk add --no-cache geos gdal
 
 # lint
 RUN pip install --upgrade pip

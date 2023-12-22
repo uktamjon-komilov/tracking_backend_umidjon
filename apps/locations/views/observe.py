@@ -2,8 +2,6 @@ import random
 import contextlib
 import numpy as np
 
-from django.contrib.gis.geos import Point
-from django.contrib.gis.db.models.functions import Distance
 from django.utils.timezone import datetime, timedelta, make_aware, get_current_timezone
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -88,24 +86,6 @@ def calculate_zoom_level(locations, map_width, map_height):
     return max(0, min(zoom, ZOOM_MAX))
 
 
-def get_latest_locations_within_radius(
-    centroid_longitude,
-    centroid_latitude,
-    radius_in_km=70,
-):
-    centroid = Point(centroid_longitude, centroid_latitude)
-    radius_in_meters = radius_in_km * 1000
-
-    recent_geolocations = (
-        Geolocation.objects.filter(location__distance_lte=(centroid, radius_in_meters))
-        .annotate(distance=Distance("location", centroid))
-        .order_by("received_from", "-timestamp")
-        .distinct("received_from")
-    )
-
-    return recent_geolocations
-
-
 class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
     queryset = District.get_districts()
 
@@ -131,30 +111,30 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
     def retrieve(self, request, *args, **kwargs):
         district = self.get_object()
 
-        geolocations = get_latest_locations_within_radius(
-            centroid_longitude=district.centroid_longitude,
-            centroid_latitude=district.centroid_latitude,
-            radius_in_km=district.radius_in_km,
-        )
+        users = User.objects.filter(district=district)
 
         officers = []
+        for user in users:
+            location = (
+                Geolocation.objects.filter(received_from=user)
+                .order_by("-timestamp")
+                .first()
+            )
 
-        for geolocation in geolocations:
-            user = geolocation.received_from
             officers.append(
                 {
-                    **self.get_location_dict(location=geolocation),
+                    **self.get_location_dict(location=location),
                     "received_from": str(user),
                     "short_name": user.short_name,
                     "user_id": user.id,
-                    "dot_color": district.user_color,
                     "has_not_updated_recently": not self.check_if_recently_updated(
-                        geolocation
+                        location
                     ),
                 }
             )
 
         officers.sort(key=lambda officer: officer["has_not_updated_recently"] is False)
+
         result = {"officers": officers}
         return Response(result)
 

@@ -1,13 +1,13 @@
 import traceback
 
 from django.db import transaction
-from django.contrib.gis.geos import Point
 from rest_framework.decorators import action
 from rest_framework.viewsets import mixins, GenericViewSet
 from rest_framework import serializers
 from rest_framework.response import Response
 
 from apps.locations.models import Geolocation
+from apps.users.models import User
 
 from .observe import ObserveViewSet
 
@@ -44,15 +44,8 @@ class GeolocationViewSet(GenericViewSet, mixins.CreateModelMixin):
         except serializers.ValidationError as e:
             raise e
 
-        point = Point(
-            x=serializer.validated_data["longitude"],
-            y=serializer.validated_data["latitude"],
-        )
         try:
-            serializer.save(
-                location=point,
-                received_from=request.user,
-            )
+            serializer.save(received_from=request.user)
         except Exception as e:
             return Response(
                 {
@@ -75,12 +68,7 @@ class GeolocationViewSet(GenericViewSet, mixins.CreateModelMixin):
 
         try:
             for item in serializer.validated_data["locations"]:
-                point = Point(
-                    x=serializer.validated_data["longitude"],
-                    y=serializer.validated_data["latitude"],
-                )
                 location = Geolocation(
-                    location=point,
                     longitude=item["longitude"],
                     latitude=item["latitude"],
                     timestamp=item["timestamp"],

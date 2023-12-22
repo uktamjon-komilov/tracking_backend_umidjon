@@ -1,8 +1,7 @@
 import os
-import sentry_sdk
-from glob import glob
 from pathlib import Path
 from datetime import timedelta
+import sentry_sdk
 from corsheaders.defaults import default_headers
 from dotenv import load_dotenv
 
@@ -93,8 +92,7 @@ WSGI_APPLICATION = "configs.wsgi.application"
 if os.environ.get("prod") == "1":
     DATABASES = {
         "default": {
-            # "ENGINE": "django.db.backends.postgresql",
-            "ENGINE": "django.contrib.gis.db.backends.postgis",
+            "ENGINE": "django.db.backends.postgresql",
             "HOST": os.environ.get("DB_HOST"),
             "PORT": os.environ.get("DB_PORT"),
             "NAME": os.environ.get("DB_NAME"),
@@ -175,17 +173,3 @@ SESSION_COOKIE_HTTPONLY = True
 
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Lax"
-
-if os.name == "nt":
-    VENV_BASE = os.environ["VIRTUAL_ENV"]
-    os.environ["PATH"] = (
-        os.path.join(VENV_BASE, "lib\\site-packages\\osgeo") + ";" + os.environ["PATH"]
-    )
-    os.environ["PROJ_LIB"] = (
-        os.path.join(VENV_BASE, "Lib\\site-packages\\osgeo\\data\\proj")
-        + ";"
-        + os.environ["PATH"]
-    )
-else:
-    GDAL_LIBRARY_PATH = glob("/usr/lib/libgdal.so.*")[0]
-    GEOS_LIBRARY_PATH = glob("/usr/lib/libgeos_c.so.*")[0]
