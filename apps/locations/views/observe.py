@@ -60,10 +60,10 @@ def calculate_bounds(locations):
     if not locations:
         return None
 
-    min_lat = min(location["latitude"] for location in locations)
-    max_lat = max(location["latitude"] for location in locations)
-    min_lon = min(location["longitude"] for location in locations)
-    max_lon = max(location["longitude"] for location in locations)
+    min_lat = min(float(location["latitude"]) for location in locations)
+    max_lat = max(float(location["latitude"]) for location in locations)
+    min_lon = min(float(location["longitude"]) for location in locations)
+    max_lon = max(float(location["longitude"]) for location in locations)
 
     return (min_lat, max_lat, min_lon, max_lon)
 
