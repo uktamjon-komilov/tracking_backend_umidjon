@@ -31,6 +31,9 @@ class User(Model, AbstractBaseUser, PermissionsMixin):
     is_staff = BooleanField(default=False)
     is_active = BooleanField(default=True)
 
+    has_observation_access = BooleanField(default=False)
+    has_management_access = BooleanField(default=False)
+
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []
 

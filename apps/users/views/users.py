@@ -173,7 +173,11 @@ class UsersViewSet(
                 "user_details": UserDetailsSerializer(
                     request.user,
                     context=self.get_serializer_context(),
-                ).data
+                ).data,
+                "permissions": {
+                    "has_observation_access": request.user.has_observation_access,
+                    "has_management_access": request.user.has_management_access,
+                }
             }
         )
 
