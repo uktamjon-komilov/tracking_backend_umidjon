@@ -33,6 +33,7 @@ class User(Model, AbstractBaseUser, PermissionsMixin):
 
     has_observation_access = BooleanField(default=False)
     has_management_access = BooleanField(default=False)
+    has_editing_staff_access = BooleanField(default=False)
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []
