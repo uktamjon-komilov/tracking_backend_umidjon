@@ -177,6 +177,7 @@ class UsersViewSet(
                 "permissions": {
                     "has_observation_access": request.user.has_observation_access,
                     "has_management_access": request.user.has_management_access,
+                    "has_editing_staff_access": request.user.has_editing_staff_access,
                 }
             }
         )
