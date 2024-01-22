@@ -53,6 +53,10 @@ class UserSerializer(serializers.ModelSerializer):
             "phone",
             "photo",
             "district",
+            "is_active",
+            "has_observation_access",
+            "has_management_access",
+            "has_editing_staff_access",
         ]
 
 
