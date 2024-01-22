@@ -172,9 +172,7 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
                 "middle_name": user.middle_name,
                 "phone": user.phone,
                 "duty_areas": str(user.district),
-                "photo": None
-                if user.photo is None
-                else request.build_absolute_uri(user.photo.url),
+                "photo": self.get_photo_url(request, user),
                 "has_not_updated_recently": not self.check_if_recently_updated(
                     last_location
                 ),
@@ -198,6 +196,12 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
         now_timezone_aware = make_aware(datetime.now(), get_current_timezone())
 
         return (now_timezone_aware - location.timestamp).seconds < 600
+    
+    def get_photo_url(self, request, user: User):
+        try:
+            return None if user.photo is None else request.build_absolute_uri(user.photo.url)
+        except:
+            return None
 
     def filter_by_datetime_range(self, locations, request):
         now_timezone_aware = make_aware(datetime.now(), get_current_timezone())
