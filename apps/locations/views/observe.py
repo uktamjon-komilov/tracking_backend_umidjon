@@ -92,6 +92,9 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
     def list(self, request, *args, **kwargs):
         districts = self.get_queryset()
 
+        if request.user.district:
+            districts = districts.filter(district=request.user.district)
+
         result = {"districts": []}
 
         for district in districts:
