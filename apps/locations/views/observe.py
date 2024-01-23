@@ -135,7 +135,15 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
 
         officers.sort(key=lambda officer: officer["has_not_updated_recently"] is False)
 
-        result = {"officers": officers}
+        result = {
+            "officers": officers,
+            "district": {
+                "id": district.id,
+                "name": district.name,
+                "centroid_longitude": district.centroid_longitude,
+                "centroid_latitude": district.centroid_latitude,
+            },
+        }
         return Response(result)
 
     @action(detail=True, methods=["get"], url_path="user_history")
@@ -196,10 +204,14 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
         now_timezone_aware = make_aware(datetime.now(), get_current_timezone())
 
         return (now_timezone_aware - location.timestamp).seconds < 600
-    
+
     def get_photo_url(self, request, user: User):
         try:
-            return None if user.photo is None else request.build_absolute_uri(user.photo.url)
+            return (
+                None
+                if user.photo is None
+                else request.build_absolute_uri(user.photo.url)
+            )
         except:
             return None
 
