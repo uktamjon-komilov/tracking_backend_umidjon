@@ -94,7 +94,7 @@ class ObserveViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVi
 
         district = request.user.district
 
-        if district:
+        if district and not request.user.is_director:
             districts = districts.filter(id=district.id)
 
         result = {"districts": []}
