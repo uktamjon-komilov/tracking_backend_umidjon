@@ -157,6 +157,14 @@ class UsersViewSet(
             qs = qs.filter(district=user.district)
 
         return qs
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        instance.is_active = True
+        instance.save()
+        return Response({})
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
