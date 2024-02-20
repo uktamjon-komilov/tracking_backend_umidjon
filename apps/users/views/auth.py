@@ -33,6 +33,7 @@ class TokenObtainPairSerializer(BaseSerializer):
 
 
 class TokenObtainPairView(BaseTokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
